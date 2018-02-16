@@ -59,7 +59,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/handlebars/lib.rs.html#1-314' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/handlebars/lib.rs.html#1-331' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><h1 id="handlebars" class="section-header"><a href="#handlebars">Handlebars</a></h1>
 <p><a href="http://handlebarsjs.com/">Handlebars</a> is a modern and extensible templating solution originally created in the JavaScript world. It's used by many popular frameworks like <a href="http://emberjs.com">Ember.js</a> and Chaplin. It's also ported to some other platforms such as <a href="https://github.com/jknack/handlebars.java">Java</a>.</p>
 <p>And this is handlebars Rust implementation, designed for general purpose text generation.</p>
@@ -110,6 +110,16 @@ of page as parent (header, footer, etc.), and embed you page into this
 parent.</p>
 <p>You can find a real example for template inheritance in
 <code>examples/partials.rs</code>, and templates used by this file.</p>
+<h4 id="strict-mode" class="section-header"><a href="#strict-mode">Strict mode</a></h4>
+<p>Handlebars, the language designed to work with JavaScript, has no
+strict restriction on accessing non-existed fields or index. It
+generates empty string for such case. However, in Rust we want a
+little bit strict sometime.</p>
+<p>By enabling <code>strcit_mode</code> on handlebars:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="ident">handlebars</span>.<span class="ident">set_strict_mode</span>(<span class="bool-val">true</span>);</pre>
+<p>You will get a <code>RenderError</code> when accessing fields that not exists.</p>
 <h3 id="limitations" class="section-header"><a href="#limitations">Limitations</a></h3><h4 id="compatibility-with-javascript-version" class="section-header"><a href="#compatibility-with-javascript-version">Compatibility with JavaScript version</a></h4>
 <p>This implementation is <strong>not fully compatible</strong> with the original javascript version.</p>
 <p>First of all, mustache block is not supported. I suggest you to use <code>#if</code> and <code>#each</code> for
