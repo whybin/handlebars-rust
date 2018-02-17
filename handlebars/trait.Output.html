@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `EscapeFn` type in crate `handlebars`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, EscapeFn">
+    <meta name="description" content="API documentation for the Rust `Output` trait in crate `handlebars`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Output">
 
-    <title>handlebars::EscapeFn - Rust</title>
+    <title>handlebars::Output - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
@@ -20,7 +20,7 @@
     
     
 </head>
-<body class="rustdoc type">
+<body class="rustdoc trait">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -33,7 +33,7 @@
     <nav class="sidebar">
         <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Type Definition EscapeFn</p><div class="sidebar-elems"><p class='location'><a href='index.html'>handlebars</a></p><script>window.sidebarCurrent = {name: 'EscapeFn', ty: 'type', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+        <p class='location'>Trait Output</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.write">write</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='index.html'>handlebars</a></p><script>window.sidebarCurrent = {name: 'Output', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
     <div class="theme-picker">
@@ -55,16 +55,26 @@
     </nav>
 
     <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Type Definition <a href='index.html'>handlebars</a>::<wbr><a class="type" href=''>EscapeFn</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>handlebars</a>::<wbr><a class="trait" href=''>Output</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/handlebars/registry.rs.html#29' title='goto source code'>[src]</a></span></h1>
-<pre class='rust typedef'>type EscapeFn = <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>&gt;;</pre><div class='docblock'><p>This type represents an <em>escape fn</em>, that is a function who's purpose it is
-to escape potentially problematic characters in a string.</p>
-<p>An <em>escape fn</em> is represented as a <code>Box</code> to avoid unnecessary type
-parameters (and because traits cannot be aliased using <code>type</code>).</p>
-</div></section>
+               </span><a class='srclink' href='../src/handlebars/output.rs.html#4-6' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait Output {
+    fn <a href='#tymethod.write' class='fnname'>write</a>(&amp;mut self, seg: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">IOError</a>&gt;;
+}</pre>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
+            <div class='methods'>
+        <h3 id='tymethod.write' class='method'><span id='write.v' class='invisible'><code>fn <a href='#tymethod.write' class='fnname'>write</a>(&amp;mut self, seg: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">IOError</a>&gt;</code></span></h3></div>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
+        <ul class='item-list' id='implementors-list'>
+    </ul><script type="text/javascript" async
+                         src="../implementors/handlebars/trait.Output.js">
+                 </script></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
