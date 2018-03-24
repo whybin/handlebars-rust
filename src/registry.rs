@@ -2,9 +2,12 @@ use std::collections::HashMap;
 use std::io::prelude::*;
 use std::fs::File;
 use std::path::Path;
+use std::ffi::OsString;
 use std::fmt::{self, Debug, Formatter};
 
 use serde::Serialize;
+
+use walkdir::{WalkDir, DirEntry};
 
 use regex::{Captures, Regex};
 
@@ -18,6 +21,23 @@ use error::{RenderError, TemplateError, TemplateFileError, TemplateRenderError};
 
 lazy_static!{
     static ref DEFAULT_REPLACE: Regex = Regex::new(">|<|\"|&").unwrap();
+}
+
+/// Skips filenames with invalid Unicode, hidden files, and Emacs autosaves
+fn is_valid_entry(entry: &DirEntry) -> bool {
+    match entry.file_name().to_str() {
+        None => false,
+        Some(filename) => !filename.starts_with(".") && !filename.starts_with("#")
+    }
+}
+
+/// Filters for type 'file' with the specified extension
+fn is_matching_file(entry: Option<&DirEntry>, ext: &str) -> bool {
+    entry
+        .map(|e| {
+            e.path().is_file() && e.file_name().to_string_lossy().ends_with(&ext)
+        })
+    .unwrap_or(false)
 }
 
 /// This type represents an *escape fn*, that is a function who's purpose it is
@@ -172,6 +192,40 @@ impl Registry {
         let mut file =
             try!(File::open(tpl_path).map_err(|e| TemplateFileError::IOError(e, name.to_owned())));
         self.register_template_source(name, &mut file)
+    }
+
+    /// Register all templates from a directory and with the specified extension name.
+    /// Registered template names have the directory stripped (no leading slash),
+    /// as well as the extension.
+    pub fn register_all_templates_dir<S>(
+        &mut self,
+        dir: S,
+        ext: S
+    ) -> Result<(), TemplateFileError>
+    where S: Into<OsString> {
+        let dir = dir.into();
+        let mut ext = ext.into().to_string_lossy().to_string();
+        if ext.len() > 0 {
+            ext.insert(0, '.');
+        }
+
+        let ext_len = ext.len();
+
+        for entry in WalkDir::new(&dir)
+                .min_depth(1)
+                .into_iter()
+                // Skip descending invalid directories
+                .filter_entry(is_valid_entry)
+                .filter(|e| is_matching_file(e.as_ref().ok(), &ext)) {
+            let path = Path::new(entry.as_ref().unwrap().path());
+            let tpl_name = path.strip_prefix(&dir).unwrap().to_string_lossy();
+            let tpl_name = &tpl_name[0..tpl_name.len() - ext_len];
+            let tpl_canonical_name = tpl_name.replace("\\", "/");
+
+            self.register_template_file(&tpl_canonical_name, &path)?;
+        }
+
+        Ok(())
     }
 
     /// Register a template from `std::io::Read` source
