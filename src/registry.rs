@@ -450,6 +450,8 @@ impl Registry {
 
 #[cfg(test)]
 mod test {
+    use std::fs::{File, create_dir_all, remove_dir_all};
+
     use registry::Registry;
     use render::{Helper, RenderContext, Renderable};
     use helpers::HelperDef;
@@ -492,6 +494,48 @@ mod test {
 
         // built-in helpers plus 1
         assert_eq!(r.helpers.len(), 7 + 1);
+    }
+
+    #[test]
+    fn test_register_all_in_directory() {
+        let mut r = Registry::new();
+
+        let root_dir = "_test_registry";
+        let ext_name = "txt";
+        let filestem = "filename";
+        let filename = format!("{}.{}", filestem, ext_name);
+        let sub_dirs = vec![".hidden", "subdir"];
+        for d in &sub_dirs {
+            let dir = format!("{}/{}", root_dir, d);
+            create_dir_all(&dir).unwrap();
+            File::create(format!("{}/{}", dir, filename)).unwrap();
+        }
+
+        File::create(format!("{}/{}", root_dir, filename)).unwrap();
+        // Invalid files
+        File::create(format!("{}/#emacs.txt#", root_dir)).unwrap();
+        File::create(format!("{}/.hidden.txt", root_dir)).unwrap();
+        let no_ext_name = "wrongtxt";
+        File::create(format!("{}/{}", root_dir, no_ext_name)).unwrap();
+
+        assert!(r.register_all_templates_dir(root_dir, ext_name).is_ok());
+
+        // Check registered templates
+        assert!(r.get_template(&filestem).is_some());
+        let nested_name = format!("{}/{}", sub_dirs[1], filestem);
+        assert!(r.get_template(&nested_name).is_some());
+        assert_eq!(r.get_templates().len(), 2);
+
+        // Test empty extension
+        let mut r = Registry::new();
+
+        assert!(r.register_all_templates_dir(root_dir, "").is_ok());
+
+        assert!(r.get_template(&filename).is_some());
+        assert!(r.get_template(&no_ext_name).is_some());
+        assert_eq!(r.get_templates().len(), 3);
+
+        remove_dir_all(root_dir).unwrap();
     }
 
     #[test]
